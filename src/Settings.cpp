@@ -30,6 +30,7 @@ void Settings::ReadSettings()
 	ReadBoolSetting(mcm, "General", "bEnableStateAdjustments", bEnableStateAdjustments);
 	
 	ReadFloatSetting(mcm, "General", "fSneakControllerCapsuleHeightMultiplier", fSneakControllerShapeHeightMultiplier);
+	ReadFloatSetting(mcm, "General", "fProneControllerCapsuleHeightMultiplier", fProneControllerShapeHeightMultiplier);
 	ReadFloatSetting(mcm, "General", "fSwimmingControllerShapeHeightMultiplier", fSwimmingControllerShapeHeightMultiplier);
 	ReadFloatSetting(mcm, "General", "fSwimmingControllerShapeRadiusMultiplier", fSwimmingControllerShapeRadiusMultiplier);
 
