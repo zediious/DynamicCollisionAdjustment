@@ -1,4 +1,6 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.10...3.31.5)
+set(CMAKE_WARN_DEPRECATED OFF)
+set(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION OFF)
 
 project(
 	DynamicCollisionAdjustment

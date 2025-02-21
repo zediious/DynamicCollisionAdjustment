@@ -20,6 +20,8 @@ public:
 
 		RE::bhkCharacterController* controller;
 		RE::ActorHandle actorHandle;
+		int isProne = 0;
+		int playerProne = false;
 		
 		void Initialize();
 		void AdjustScale();
@@ -39,7 +41,7 @@ public:
 		return std::addressof(singleton);
 	}
 
-	void OnPostLoadGame();
+	static void OnPostLoadGame();
 
 	void ActorSneakStateChanged(RE::ActorHandle a_actorHandle, bool a_bIsSneaking);
 	void CharacterControllerStateChanged(RE::bhkCharacterController* a_charController, RE::hkpCharacterStateType a_stateType);

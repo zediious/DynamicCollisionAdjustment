@@ -1,6 +1,7 @@
 #include "Hooks.h"
 #include "Papyrus.h"
 #include "Settings.h"
+#include "AdjustmentHandler.h"
 
 void MessageHandler(SKSE::MessagingInterface::Message* a_msg)
 {
@@ -11,8 +12,10 @@ void MessageHandler(SKSE::MessagingInterface::Message* a_msg)
 		Settings::RequestAPIs();
 		break;
 	case SKSE::MessagingInterface::kPostLoadGame:
+		AdjustmentHandler::OnPostLoadGame();
 	case SKSE::MessagingInterface::kNewGame:
 		Settings::OnPostLoadGame();
+		AdjustmentHandler::OnPostLoadGame();
 		break;
 	}
 }
@@ -88,7 +91,7 @@ extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_s
 		Sleep(100);
 	}
 #endif
-	REL::Module::reset();  // Clib-NG bug workaround
+	// REL::Module::reset();  // Clib-NG bug workaround
 
 	InitializeLog();
 	logger::info("{} v{}"sv, Plugin::NAME, Plugin::VERSION.string());

@@ -26,6 +26,7 @@ struct Settings
 	static inline bool bEnableStateAdjustments = true;
 
 	static inline float fSneakControllerShapeHeightMultiplier = 0.75f;
+	static inline float fProneControllerShapeHeightMultiplier = 0.30f;
 	static inline float fSwimmingControllerShapeHeightMultiplier = 0.75f;
 	static inline float fSwimmingControllerShapeRadiusMultiplier = 2.f;
 

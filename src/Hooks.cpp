@@ -48,8 +48,20 @@ namespace Hooks
 	void SneakHooks::ProcessButton(RE::SneakHandler* a_this, RE::ButtonEvent* a_event, RE::PlayerControlsData* a_data)
 	{
 		auto playerCharacter = RE::PlayerCharacter::GetSingleton();
+		auto playerProne = false;
+		auto isProne = 0;
+		RE::BSAnimationGraphVariableCache* animationGraphCache = nullptr;
+		if (playerCharacter) {
+			animationGraphCache = playerCharacter->GetMiddleHighProcess()->animationVariableCache;
+		}
+		if (animationGraphCache) {
+			playerProne = animationGraphCache->GetAnimationGraph()->GetGraphVariableInt("IsCrawling", isProne);
+		}
 		if (playerCharacter && playerCharacter->IsSneaking()) {
 			if (!AdjustmentHandler::CheckEnoughSpaceToStand(playerCharacter->GetHandle())) {
+				return;
+			}
+			if (isProne == 1) {
 				return;
 			}
 		}

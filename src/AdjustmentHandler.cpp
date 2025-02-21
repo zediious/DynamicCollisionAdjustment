@@ -58,8 +58,23 @@ bool AdjustmentHandler::CheckEnoughSpaceToStand(RE::ActorHandle a_actorHandle)
 	RE::hkVector4 charControllerPos, raycastStart, raycastEnd;
 	charController->GetPosition(charControllerPos, false);
 
-	raycastStart = charControllerPos;
-	raycastEnd = raycastStart + ((controllerData->originalVerts[9] * 2.f) * controllerData->actorScale) + controllerData->originalVerts[8];
+	auto playerCharacter = RE::PlayerCharacter::GetSingleton();
+	auto playerProne = false;
+	auto isProne = 0;
+	RE::BSAnimationGraphVariableCache* animationGraphCache = nullptr;
+	if (playerCharacter) {
+		animationGraphCache = playerCharacter->GetMiddleHighProcess()->animationVariableCache;
+	}
+	if (animationGraphCache) {
+		playerProne = animationGraphCache->GetAnimationGraph()->GetGraphVariableInt("IsCrawling", isProne);
+	}
+
+	raycastStart = charControllerPos - (controllerData->actorScale / 8);
+	if (isProne == 0) {
+		raycastEnd = raycastStart + ((controllerData->originalVerts[9] * 2.f) * controllerData->actorScale) + controllerData->originalVerts[8];
+	} else {
+		raycastEnd = raycastStart + ((controllerData->originalVerts[9] * 1.55f) * controllerData->actorScale) + controllerData->originalVerts[8];
+	}
 	
 	RE::hkpWorldRayCastInput raycastInput;
 	RE::hkpWorldRayCastOutput raycastOutput;
@@ -319,12 +334,33 @@ void AdjustmentHandler::ControllerData::AdjustConvex()
 			}
 
 			float sneakMult = bIsSneaking && characterState == RE::hkpCharacterStateType::kOnGround ? Settings::fSneakControllerShapeHeightMultiplier : 1.f;
+			float proneMult = bIsSneaking && characterState == RE::hkpCharacterStateType::kOnGround ? Settings::fProneControllerShapeHeightMultiplier : 1.f;
 			float swimmingHeightMult = characterState == RE::hkpCharacterStateType::kSwimming ? Settings::fSwimmingControllerShapeHeightMultiplier : 1.f;
 			float swimmingRadiusMult = characterState == RE::hkpCharacterStateType::kSwimming ? Settings::fSwimmingControllerShapeRadiusMultiplier : 1.f;
 			float scaleMult = actorScale;
-
-			float heightMult = sneakMult * swimmingHeightMult * scaleMult;
 			float radiusMult = scaleMult * swimmingRadiusMult;
+			float heightMult;
+
+			auto playerHandle = RE::PlayerCharacter::GetSingleton();
+			RE::BSAnimationGraphVariableCache* animationGraphCache = nullptr;
+			if (playerHandle) {
+				animationGraphCache = playerHandle->GetMiddleHighProcess()->animationVariableCache;
+			}
+			playerProne = false;
+			isProne = 0;
+
+			if (animationGraphCache) {
+				playerProne = animationGraphCache->GetAnimationGraph()->GetGraphVariableInt("IsCrawling", isProne);
+			}
+			
+			if (isProne == 1) {
+				// logger::info("IsCrawling found and valid");
+				heightMult = proneMult * swimmingHeightMult * scaleMult;
+			}
+			else {
+				// logger::info("IsCrawling is false");
+				heightMult = sneakMult * swimmingHeightMult * scaleMult;
+			}
 
 			RE::BSWriteLockGuard lock(world->worldLock);
 

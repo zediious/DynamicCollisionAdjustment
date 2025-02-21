@@ -10,5 +10,15 @@ namespace Papyrus
 		static bool Register(RE::BSScript::IVirtualMachine* a_vm);
 	};
 
+	class DynamicCollisionAdjustment_Prone
+	{
+	public:
+		static void SetProneState(RE::StaticFunctionTag*, bool, bool);
+
+		static bool CanPlayerGetUp(RE::StaticFunctionTag*);
+
+		static bool Register(RE::BSScript::IVirtualMachine* a_vm);
+	};
+
 	void Register();
 }
